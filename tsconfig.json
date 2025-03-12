@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ESNext",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true, // 處理模組導入時的預設導出
+    "esModuleInterop": true, // 允許我們混用 import 和 require 這兩種不同模組的語法
+    "sourceMap": true // debug 用
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

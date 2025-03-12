@@ -1,0 +1,17 @@
+body {
+  min-height: 100vh;
+}
+
+.MuiList-root::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+}
+
+.MuiList-root::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: transparent;
+}
+.MuiList-root::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #666666;
+}
