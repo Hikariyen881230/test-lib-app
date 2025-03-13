@@ -9,8 +9,11 @@ import {
   Modal,
   Paper,
 } from "@mui/material";
+import UploadBtn from "./upload-btn";
+import "./style.css";
 
 function HTML5QRCode() {
+  // scan
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const html5QrCode = useRef(null);
@@ -64,8 +67,29 @@ function HTML5QRCode() {
     stream && stream.getTracks().forEach((track) => track.stop());
   };
 
+  // 上傳圖片
+  const handleUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const result = await scanImage(file);
+      result && setScanedText(result);
+    }
+  };
+
+  const scanImage = async (file) => {
+    const html5QrCode = new Html5Qrcode("reader");
+    try {
+      const result = await html5QrCode.scanFile(file, false);
+      return result;
+    } catch (error) {
+      alert("請上傳正確的QR Code");
+      return "";
+    }
+  };
+
   return (
     <div>
+      <div id="reader" style={{ display: "none" }}></div>
       {/* QRCode Modal */}
       <Modal
         open={openModal}
@@ -139,6 +163,9 @@ function HTML5QRCode() {
             </g>
           </svg>
         </IconButton>
+        <UploadBtn>
+          <input type="file" accept="image/*" onChange={handleUpload} />
+        </UploadBtn>
       </Paper>
     </div>
   );

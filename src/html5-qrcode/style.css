@@ -1,5 +1,5 @@
-#reader__scan_region {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.prettier-input {
+  input {
+    display: none;
+  }
 }
