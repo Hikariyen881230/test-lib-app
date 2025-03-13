@@ -7,7 +7,7 @@ function Layout() {
     { lable: "Home", url: "/" },
     { lable: "Intl", url: "/intl" },
     { lable: "DnD", url: "/dnd" },
-    { lable: "Camera", url: "/camera" },
+    { lable: "HTML5-QRCode", url: "/html5-qrcode" },
   ];
   return (
     <Box sx={{ maxWidth: 1440, margin: "0 auto" }}>

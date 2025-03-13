@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Intl from "./intl";
 import Layout from "./components/layout";
 import Dnd from "./dnd";
-import Camera from "./camera";
+import HTML5QRCode from "./html5-qrcode";
 
 export const messages = {
   en: {
@@ -45,7 +45,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route path="/intl" element={<Intl />} />
             <Route path="/dnd" element={<Dnd />} />
-            <Route path="/camera" element={<Camera />} />
+            <Route path="/HTML5-QRCode" element={<HTML5QRCode />} />
           </Route>
         </Routes>
       </IntlProvider>
