@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 function HTML5QRCode() {
-  const [allowedCamera, setAllowedCamera] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const html5QrCode = useRef(null);
 
@@ -42,31 +42,27 @@ function HTML5QRCode() {
   }, [openModal]);
 
   // 啟動相機
-  const scanQRCode = () => {
-    if (allowedCamera) {
-      setOpenModal(true);
-    } else {
-      alert("請允許使用相機");
+  const scanQRCode = async () => {
+    try {
+      // 嘗試取得相機權限，會自動跳出詢問框
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      if (stream.active) setOpenModal(true);
+      setStream(stream);
+    } catch (error) {
+      // 若用戶拒絕權限，則提示警告
+      alert("請允許使用相機以掃描 QR Code");
     }
   };
 
   // 停止相機
-  const handleStop = () => {
+  const handleStop = async () => {
     setOpenModal(false);
     html5QrCode.current.handleStop();
+    // 釋放攝影機資源
+    stream && stream.getTracks().forEach((track) => track.stop());
   };
-
-  useEffect(() => {
-    navigator.permissions
-      .query({ name: "camera" as PermissionName })
-      .then((permission) => {
-        if (permission.state === "denied") {
-          setAllowedCamera(false);
-        } else if (permission.state === "granted") {
-          setAllowedCamera(true);
-        }
-      });
-  }, []);
 
   return (
     <div>
