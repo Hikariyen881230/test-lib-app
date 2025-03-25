@@ -176,17 +176,17 @@ export default HTML5QRCode;
 // 封裝 傳入 Dom 的 id
 export const generateHtml5QrCode = (domId: string) => {
   const html5QrCode = new Html5Qrcode(domId);
-
   // 啟動相機  開啟掃描功能
   // 傳入 qrCodeSuccessCallback 掃描成功後要做的事
-  const start = (qrCodeSuccessCallback: (decodedText: any) => void) => {
+  const brConfig = { fps: 10, qrbox: { width: 400, height: 400 } };
+  const start = async (qrCodeSuccessCallback: (decodedText: any) => void) => {
+    const cameras = await Html5Qrcode.getCameras();
     // 相機brcode顯示設定
-    const brConfig = { fps: 10, qrbox: { width: 400, height: 400 } };
 
     // 套件啟動相機function
     html5QrCode.start(
       // 使用預設前或後鏡頭 （environment 為使用預設）
-      { facingMode: "environment" },
+      cameras[0].id,
       // 相機brcode顯示設定
       brConfig,
       // 掃描成功後的 Callback
