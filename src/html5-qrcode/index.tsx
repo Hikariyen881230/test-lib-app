@@ -218,6 +218,8 @@ export const generateHtml5QrCode = (domId: string) => {
             : cameras[0];
 
         if (nextCamera) {
+          console.log({ nextCamera });
+
           await html5QrCode.stop(); // 先停止當前相機
           await html5QrCode.start(
             nextCamera.id,
