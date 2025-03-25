@@ -218,8 +218,6 @@ export const generateHtml5QrCode = (domId: string) => {
             : cameras[0];
 
         if (nextCamera) {
-          console.log({ nextCamera });
-
           await html5QrCode.stop(); // 先停止當前相機
           await html5QrCode.start(
             nextCamera.id,
@@ -231,13 +229,15 @@ export const generateHtml5QrCode = (domId: string) => {
       }
     } catch (error) {
       alert("切換相機失敗");
-      const cameras = await Html5Qrcode.getCameras();
-      await html5QrCode.start(
-        cameras[0].id,
-        brConfig,
-        succesCallback,
-        qrCodeErrorCallback
-      );
+      switchCamera();
+      // const cameras = await Html5Qrcode.getCameras();
+      // await html5QrCode.start(
+      //   cameras[0].id,
+      //   brConfig,
+      //   succesCallback,
+      //   qrCodeErrorCallback
+      // );
+      return;
     }
   };
 
