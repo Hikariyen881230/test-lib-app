@@ -191,16 +191,15 @@ export const generateHtml5QrCode = (domId: string) => {
     }
     const cameras = await Html5Qrcode.getCameras();
     // 找到後鏡頭 (label 包含 "back" 或 "environment")
-    const backCamera = cameras.find(
-      (camera) =>
-        camera.label.toLowerCase().includes("camera2 0") ||
-        camera.label.toLowerCase().includes("environment")
-    );
-    console.log({ cameras });
-    console.log({ backCamera });
+    const backCameras = cameras.filter((camera) => {
+      camera.label.toLocaleLowerCase().includes("back") ||
+        camera.label.toLocaleLowerCase().includes("environment") ||
+        camera.label.toLocaleLowerCase().includes("後");
+    });
+    console.log({ backCameras });
 
     // 若找不到後鏡頭，則選擇第一個可用相機
-    const selectedCameraId = backCamera ? backCamera.id : cameras[0].id;
+    const selectedCameraId = backCameras ? backCameras[0].id : cameras[0].id;
 
     // 套件啟動相機function
     html5QrCode.start(
