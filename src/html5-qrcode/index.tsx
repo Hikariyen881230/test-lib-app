@@ -59,6 +59,9 @@ function HTML5QRCode() {
     }
   };
 
+  const handleSwitch = async () => {
+    html5QrCode.current.switchCamera();
+  };
   // 停止相機
   const handleStop = async () => {
     setOpenModal(false);
@@ -107,11 +110,12 @@ function HTML5QRCode() {
             gap: 1,
           }}
         >
-          {
-            <Button onClick={handleStop} variant={"contained"}>
-              關閉相機
-            </Button>
-          }
+          <Button onClick={handleStop} variant={"contained"}>
+            關閉相機
+          </Button>
+          <Button onClick={handleSwitch} variant={"contained"}>
+            關閉相機
+          </Button>
           <Box
             sx={{ width: 600, height: "auto" }}
             id="qrcode-reader"
@@ -176,10 +180,15 @@ export default HTML5QRCode;
 // 封裝 傳入 Dom 的 id
 export const generateHtml5QrCode = (domId: string) => {
   const html5QrCode = new Html5Qrcode(domId);
+  let succesCallback;
   // 啟動相機  開啟掃描功能
   // 傳入 qrCodeSuccessCallback 掃描成功後要做的事
   const brConfig = { fps: 10, qrbox: { width: 400, height: 400 } };
   const start = async (qrCodeSuccessCallback: (decodedText: any) => void) => {
+    succesCallback = qrCodeSuccessCallback;
+    if (html5QrCode.getState() === 2) {
+      handleStop();
+    }
     const cameras = await Html5Qrcode.getCameras();
     // 找到後鏡頭 (label 包含 "back" 或 "environment")
     const backCamera = cameras.find(
@@ -202,6 +211,37 @@ export const generateHtml5QrCode = (domId: string) => {
       // Error的 Callback
       qrCodeErrorCallback
     );
+  };
+
+  const switchCamera = async () => {
+    try {
+      const cameras = await Html5Qrcode.getCameras();
+      if (cameras.length > 1) {
+        const currentCameraId = html5QrCode.getRunningTrackSettings().deviceId;
+        const nextCamera = cameras.find(
+          (camera) => camera.id !== currentCameraId
+        );
+
+        if (nextCamera) {
+          await html5QrCode.stop(); // 先停止當前相機
+          await html5QrCode.start(
+            nextCamera.id,
+            brConfig,
+            succesCallback,
+            qrCodeErrorCallback
+          );
+        }
+      }
+    } catch (error) {
+      alert("切換相機失敗");
+      const cameras = await Html5Qrcode.getCameras();
+      await html5QrCode.start(
+        cameras[0].id,
+        brConfig,
+        succesCallback,
+        qrCodeErrorCallback
+      );
+    }
   };
 
   // 關閉相機
@@ -227,5 +267,6 @@ export const generateHtml5QrCode = (domId: string) => {
   return {
     start,
     handleStop,
+    switchCamera,
   };
 };
