@@ -181,12 +181,20 @@ export const generateHtml5QrCode = (domId: string) => {
   const brConfig = { fps: 10, qrbox: { width: 400, height: 400 } };
   const start = async (qrCodeSuccessCallback: (decodedText: any) => void) => {
     const cameras = await Html5Qrcode.getCameras();
-    // 相機brcode顯示設定
+    // 找到後鏡頭 (label 包含 "back" 或 "environment")
+    const backCamera = cameras.find(
+      (camera) =>
+        camera.label.toLowerCase().includes("back") ||
+        camera.label.toLowerCase().includes("environment")
+    );
+
+    // 若找不到後鏡頭，則選擇第一個可用相機
+    const selectedCameraId = backCamera ? backCamera.id : cameras[0].id;
 
     // 套件啟動相機function
     html5QrCode.start(
       // 使用預設前或後鏡頭 （environment 為使用預設）
-      cameras[0].id,
+      selectedCameraId,
       // 相機brcode顯示設定
       brConfig,
       // 掃描成功後的 Callback
