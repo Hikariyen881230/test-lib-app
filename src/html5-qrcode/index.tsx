@@ -49,7 +49,7 @@ function HTML5QRCode() {
     try {
       // 嘗試取得相機權限，會自動跳出詢問框
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
+        video: true,
       });
       if (stream.active) setOpenModal(true);
       setStream(stream);
@@ -190,21 +190,10 @@ export const generateHtml5QrCode = (domId: string) => {
       handleStop();
     }
     const cameras = await Html5Qrcode.getCameras();
-    // 找到後鏡頭 (label 包含 "back" 或 "environment")
-    const backCameras = cameras.filter((camera) => {
-      camera.label.toLocaleLowerCase().includes("back") ||
-        camera.label.toLocaleLowerCase().includes("environment") ||
-        camera.label.toLocaleLowerCase().includes("後");
-    });
-
-    // 若找不到後鏡頭，則選擇第一個可用相機
-    const selectedCameraId =
-      backCameras.length > 0 ? backCameras[0].id : cameras[0].id;
-
     // 套件啟動相機function
     html5QrCode.start(
       // 使用預設前或後鏡頭 （environment 為使用預設）
-      selectedCameraId,
+      cameras[0].id,
       // 相機brcode顯示設定
       brConfig,
       // 掃描成功後的 Callback
@@ -219,9 +208,14 @@ export const generateHtml5QrCode = (domId: string) => {
       const cameras = await Html5Qrcode.getCameras();
       if (cameras.length > 1) {
         const currentCameraId = html5QrCode.getRunningTrackSettings().deviceId;
-        const nextCamera = cameras.find(
-          (camera) => camera.id !== currentCameraId
+        const currentCameraIndex = cameras.findIndex(
+          (camera) => camera.id === currentCameraId
         );
+        const nextCameraIndex = currentCameraIndex + 1;
+        const nextCamera =
+          nextCameraIndex <= cameras.length
+            ? cameras[nextCameraIndex]
+            : cameras[0];
 
         if (nextCamera) {
           await html5QrCode.stop(); // 先停止當前相機
