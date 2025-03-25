@@ -194,9 +194,7 @@ export const generateHtml5QrCode = (domId: string) => {
     const backCamera = cameras.find(
       (camera) =>
         camera.label.toLowerCase().includes("back") ||
-        camera.label.toLowerCase().includes("environment") ||
-        camera.label.toLowerCase().includes("後") ||
-        camera.label.toLowerCase().includes("環境")
+        camera.label.toLowerCase().includes("environment")
     );
 
     // 若找不到後鏡頭，則選擇第一個可用相機
@@ -236,7 +234,13 @@ export const generateHtml5QrCode = (domId: string) => {
       }
     } catch (error) {
       alert("切換相機失敗");
-      start(succesCallback);
+      const cameras = await Html5Qrcode.getCameras();
+      await html5QrCode.start(
+        cameras[0].id,
+        brConfig,
+        succesCallback,
+        qrCodeErrorCallback
+      );
     }
   };
 
