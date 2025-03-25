@@ -196,6 +196,7 @@ export const generateHtml5QrCode = (domId: string) => {
         camera.label.toLowerCase().includes("back") ||
         camera.label.toLowerCase().includes("environment")
     );
+    console.log({ cameras });
 
     // 若找不到後鏡頭，則選擇第一個可用相機
     const selectedCameraId = backCamera ? backCamera.id : cameras[0].id;
