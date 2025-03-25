@@ -49,7 +49,7 @@ function HTML5QRCode() {
     try {
       // 嘗試取得相機權限，會自動跳出詢問框
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { facingMode: { ideal: "environment" } },
       });
       if (stream.active) setOpenModal(true);
       setStream(stream);
@@ -114,7 +114,7 @@ function HTML5QRCode() {
             關閉相機
           </Button>
           <Button onClick={handleSwitch} variant={"contained"}>
-            關閉相機
+            切換相機
           </Button>
           <Box
             sx={{ width: 600, height: "auto" }}
@@ -196,10 +196,10 @@ export const generateHtml5QrCode = (domId: string) => {
         camera.label.toLocaleLowerCase().includes("environment") ||
         camera.label.toLocaleLowerCase().includes("後");
     });
-    console.log({ backCameras });
 
     // 若找不到後鏡頭，則選擇第一個可用相機
-    const selectedCameraId = backCameras ? backCameras[0].id : cameras[0].id;
+    const selectedCameraId =
+      backCameras.length > 0 ? backCameras[0].id : cameras[0].id;
 
     // 套件啟動相機function
     html5QrCode.start(
