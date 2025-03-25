@@ -229,14 +229,13 @@ export const generateHtml5QrCode = (domId: string) => {
       }
     } catch (error) {
       alert("切換相機失敗");
-      await switchCamera();
-      // const cameras = await Html5Qrcode.getCameras();
-      // await html5QrCode.start(
-      //   cameras[0].id,
-      //   brConfig,
-      //   succesCallback,
-      //   qrCodeErrorCallback
-      // );
+      const cameras = await Html5Qrcode.getCameras();
+      await html5QrCode.start(
+        cameras[0].id,
+        brConfig,
+        succesCallback,
+        qrCodeErrorCallback
+      );
       return;
     }
   };
