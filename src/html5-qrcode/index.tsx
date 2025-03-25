@@ -49,7 +49,7 @@ function HTML5QRCode() {
     try {
       // 嘗試取得相機權限，會自動跳出詢問框
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { facingMode: "environment" },
       });
       if (stream.active) setOpenModal(true);
       setStream(stream);
@@ -203,7 +203,8 @@ export const generateHtml5QrCode = (domId: string) => {
     // 套件啟動相機function
     html5QrCode.start(
       // 使用預設前或後鏡頭 （environment 為使用預設）
-      selectedCameraId,
+      // selectedCameraId,
+      { facingMode: "environment" },
       // 相機brcode顯示設定
       brConfig,
       // 掃描成功後的 Callback
