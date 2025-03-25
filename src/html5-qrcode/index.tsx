@@ -49,7 +49,7 @@ function HTML5QRCode() {
     try {
       // 嘗試取得相機權限，會自動跳出詢問框
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: true,
       });
       if (stream.active) setOpenModal(true);
       setStream(stream);
@@ -194,7 +194,9 @@ export const generateHtml5QrCode = (domId: string) => {
     const backCamera = cameras.find(
       (camera) =>
         camera.label.toLowerCase().includes("back") ||
-        camera.label.toLowerCase().includes("environment")
+        camera.label.toLowerCase().includes("environment") ||
+        camera.label.toLowerCase().includes("後") ||
+        camera.label.toLowerCase().includes("環境")
     );
 
     // 若找不到後鏡頭，則選擇第一個可用相機
@@ -203,8 +205,7 @@ export const generateHtml5QrCode = (domId: string) => {
     // 套件啟動相機function
     html5QrCode.start(
       // 使用預設前或後鏡頭 （environment 為使用預設）
-      // selectedCameraId,
-      { facingMode: "environment" },
+      selectedCameraId,
       // 相機brcode顯示設定
       brConfig,
       // 掃描成功後的 Callback
@@ -235,13 +236,7 @@ export const generateHtml5QrCode = (domId: string) => {
       }
     } catch (error) {
       alert("切換相機失敗");
-      const cameras = await Html5Qrcode.getCameras();
-      await html5QrCode.start(
-        cameras[0].id,
-        brConfig,
-        succesCallback,
-        qrCodeErrorCallback
-      );
+      start(succesCallback);
     }
   };
 
