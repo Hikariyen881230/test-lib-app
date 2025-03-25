@@ -193,7 +193,7 @@ export const generateHtml5QrCode = (domId: string) => {
     // 找到後鏡頭 (label 包含 "back" 或 "environment")
     const backCamera = cameras.find(
       (camera) =>
-        camera.label.toLowerCase().includes("back") ||
+        camera.label.toLowerCase().includes("camera2 0") ||
         camera.label.toLowerCase().includes("environment")
     );
     console.log({ cameras });
